@@ -1,0 +1,4 @@
+alert udp any any -> any 53 (msg:"Sliver: Possible DNS Tunnel detected, re-use of suspicious dns.id 0400"; \
+    content:"|04 00|"; offset:0; depth:2; \
+threshold:type both, track by_src, count 5, seconds 60; \
+classtype:trojan-activity; sid:10000027; rev:1;)

@@ -1,0 +1,34 @@
+alert http any any -> any 80 (msg:"C2-Sliver: Suspicous Keywords detected in HTTP POST"; \
+    http.method; content:"POST"; \
+    http.uri; content:"php"; nocase; \
+    file.data; pcre:"/\x49\x43\x54\x45\x52\x49\x43\x41\x4c| \
+    \x53\x54\x41\x52\x46\x49\x53\x48| \
+    \x47\x55\x45\x53\x54\x49\x4e\x47| \
+    \x4f\x56\x45\x52\x4f\x52\x47\x41\x4e\x49\x5a\x45| \
+    \x43\x4f\x4e\x46\x45\x52\x4d\x45\x4e\x54\x53/"; \
+classtype:trojan-activity; sid:1000400; rev:1;)
+
+alert http any any -> any 80 (msg:"C2-Havoc: Suspicious HTTP Default Parameters"; \
+    http.method; content:"POST"; \
+    http.uri; content:"/"; urilen:1; \
+    http.content_type; content:"*/*"; \
+threshold:type both, track by_src, count 10, seconds 60; \
+sid:1000404; rev:1;)
+
+alert http any any -> any 80 (msg:"HTTP POST flow detected"; \
+    flow:to_server,established; \
+    http.method; content:"POST"; \
+flowbits:set,http_post; flowbits:noalert; \
+sid:1000401; rev:1;)
+
+alert http any any -> any 80 (msg:"HTTP GET request in flow detected"; \
+    flow:to_server,established; \
+    http.method; content:"GET"; \
+flowbits:set,non_http_post; flowbits:unset,http_post; flowbits:noalert; \
+sid:1000402; rev:1;)
+
+alert ip any any -> any any (msg:"Flow with only HTTP POST requests"; \
+    flow:to_server,established; \
+flowbits:isset,http_post; flowbits:isnotset,non_http_post; \
+threshold:type both, track by_src, count 10, seconds 60; \
+sid:1000403; rev:2;)

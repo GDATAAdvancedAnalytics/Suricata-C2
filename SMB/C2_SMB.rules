@@ -1,0 +1,3 @@
+alert smb any any -> any 445 (msg:"SMB Tree Connect Request to IPC$ detected"; \
+    smb.named_pipe; content:"IPC"; nocase; \
+sid:10000040; rev:1;)

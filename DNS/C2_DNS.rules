@@ -1,0 +1,14 @@
+alert dns any any -> any 53 (msg:"Multiple Huge amount of DNS-Queries possibel C2-Channel or exfiltration detected"; \
+    dns.opcode:0; \
+threshold:type both, track by_src, count 30, seconds 60; \
+sid:1000020; rev:1;)
+
+alert dns any any -> any 53 (msg:"Multiple DNS Query Length exceeds 25 characters, possible C2-Channel or exfiltration detected"; \
+    dns.opcode:0; dns.query; bsize:>25; \
+threshold:type both, track by_src, count 10, seconds 60; \
+sid:1000021; rev:1;)
+
+alert dns any 53 -> any any (msg:"Multiple DNS Answer to single Host exceeds 100 Byte, possible C2-Channel detected"; \
+    dsize:>=100; \
+threshold:type both, track by_dst, count 10, seconds 60; \
+sid:1000022; rev:1;)
