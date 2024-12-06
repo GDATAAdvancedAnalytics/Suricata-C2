@@ -1,5 +1,5 @@
 # Suricata-C2
-The Suricata rules presented here are based on the blog post (link to follow), where we detected C2 traffic using Suricata.
+The Suricata rules presented here are based on the blog post [Detection of Command and Control Traffic Using Suricata | cyber.wtf](https://cyber.wtf/2024/12/06/detection-of-c2-using-suricata/), where we detected C2 traffic using Suricata.
 
 Note:
 - Not all rules necessarily relate to C2 traffic.
